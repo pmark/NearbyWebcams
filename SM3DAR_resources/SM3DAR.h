@@ -16,7 +16,6 @@
 @class SM3DAR_FocusView;
 
 @protocol SM3DAR_Delegate
-@optional
 -(void)sm3darViewDidLoad;
 -(void)loadPointsOfInterest;
 -(void)didChangeFocusToPOI:(SM3DAR_PointOfInterest*)newPOI fromPOI:(SM3DAR_PointOfInterest*)oldPOI;
@@ -24,7 +23,6 @@
 @end
 
 @interface SM3DAR_Controller : UIViewController <UIAccelerometerDelegate, CLLocationManagerDelegate, MKMapViewDelegate> {
-	BOOL mapIsVisible;	
 	BOOL originInitialized;
 	MKMapView *map;	
 	UILabel *statusLabel;
@@ -36,7 +34,6 @@
 	Class markerViewClass;
 }
 
-@property (assign) BOOL mapIsVisible;
 @property (assign) BOOL originInitialized;
 @property (nonatomic, retain) MKMapView *map;
 @property (nonatomic, retain) UILabel *statusLabel;
@@ -57,7 +54,7 @@
 - (void)replaceAllPointsOfInterestWith:(NSArray*)points;
 - (NSString*)loadJSONFromFile:(NSString*)fileName;
 - (void)loadMarkersFromJSONFile:(NSString*)jsonFileName;
-- (void)loadMarkersFromJSON:(NSString*)jsonString;
+- (void)loadMarkersFromJSON:(NSString*)sm3dar_jsonString;
 - (SM3DAR_PointOfInterest*)initPointOfInterest:(NSDictionary*)properties;
 
 - (UIView *)viewForCoordinate:(SM3DAR_PointOfInterest*)poi;
@@ -80,8 +77,10 @@
 - (void)zoomMapToFit;
 - (void)setCurrentMapLocation:(CLLocation *)location;
 - (void)fadeMapToAlpha:(CGFloat)alpha;
+- (BOOL)mapIsVisible;
 - (BOOL)setMapVisibility;
 - (void)annotateMap;
+- (void)centerMapOnCurrentLocation;
 @end
 
 
@@ -136,8 +135,10 @@
 
 @interface SM3DAR_MarkerView : UIView {
 	SM3DAR_PointOfInterest *poi;
+	CGFloat distanceScaleFactor;
 }
 @property (nonatomic, retain) SM3DAR_PointOfInterest *poi;
+@property (assign) CGFloat distanceScaleFactor;
 - (id)initWithPointOfInterest:(SM3DAR_PointOfInterest*)pointOfInterest;
 - (void)buildView;
 - (void)scaleToRange;

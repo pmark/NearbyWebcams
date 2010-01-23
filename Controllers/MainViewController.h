@@ -9,6 +9,7 @@
 #import "FlipsideViewController.h"
 #import "SM3DAR.h"
 #import "WebcamsTravelClient.h"
+#import "WebcamMarkerView.h"
 
 @interface MainViewController : UIViewController <FlipsideViewControllerDelegate, SM3DAR_Delegate, APIClientDelegate> {
   SM3DAR_Controller *sm3dar;
@@ -18,6 +19,7 @@
 @property (nonatomic, retain) SM3DAR_Controller *sm3dar;
 @property (nonatomic, retain) WebcamsTravelClient *webcams;
 
-- (IBAction)showInfo;
+- (IBAction) showInfo;
+- (void) addResizeAnimation:(WebcamMarkerView*)markerView scalar:(CGFloat)scalar;
 
 @end

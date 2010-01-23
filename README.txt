@@ -13,7 +13,7 @@ X* make new app with Utility template
 X* copy 3DAR and HR
 X* create API client
 X* parse results into POI objects and add to 3DAR
-* create custom marker view (12:00 - )
+X* create custom marker view
 * create custom focus view
 * create custom detail view
 * add 3DAR info on app's flip side view

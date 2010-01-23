@@ -7,9 +7,13 @@
 //
 
 #import "FlipsideViewController.h"
+#import "SM3DAR.h"
 
-@interface MainViewController : UIViewController <FlipsideViewControllerDelegate> {
+@interface MainViewController : UIViewController <FlipsideViewControllerDelegate, SM3DAR_Delegate> {
+  SM3DAR_Controller *sm3dar;
 }
+
+@property (nonatomic, retain) SM3DAR_Controller *sm3dar;
 
 - (IBAction)showInfo;
 

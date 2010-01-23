@@ -11,38 +11,51 @@
 
 
 @implementation MainViewController
-
+@synthesize sm3dar;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
-        // Custom initialization
-    }
-    return self;
+  if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+    // Custom initialization
+  }
+  return self;
 }
 
 
-/*
- // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
- - (void)viewDidLoad {
- [super viewDidLoad];
- }
- */
+
+- (void)viewDidLoad {
+  [super viewDidLoad];
+  
+  self.sm3dar = [[[SM3DAR_Controller alloc] init] autorelease];
+  [self.view addSubview:sm3dar.view];
+  sm3dar.delegate = self;
+}
+
+#pragma mark -
+
+-(void)loadPointsOfInterest {
+  self.sm3dar.markerViewClass = nil;
+}
 
 
-/*
- // Override to allow orientations other than the default portrait orientation.
- - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
- // Return YES for supported orientations
- return (interfaceOrientation == UIInterfaceOrientationPortrait);
- }
- */
+-(void)didChangeFocusToPOI:(SM3DAR_PointOfInterest*)newPOI fromPOI:(SM3DAR_PointOfInterest*)oldPOI {
+  
+  // POI acquired focus
+  
+}
 
+
+-(void)didChangeSelectionToPOI:(SM3DAR_PointOfInterest*)newPOI fromPOI:(SM3DAR_PointOfInterest*)oldPOI {
+  
+  // POI was selected
+  
+}
+
+#pragma mark -
 
 - (void)flipsideViewControllerDidFinish:(FlipsideViewController *)controller {
-    
+  
 	[self dismissModalViewControllerAnimated:YES];
 }
-
 
 - (IBAction)showInfo {    
 	
@@ -55,19 +68,9 @@
 	[controller release];
 }
 
-
-
-/*
- // Override to allow orientations other than the default portrait orientation.
- - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
- // Return YES for supported orientations
- return (interfaceOrientation == UIInterfaceOrientationPortrait);
- }
- */
-
 - (void)didReceiveMemoryWarning {
 	// Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
+  [super didReceiveMemoryWarning];
 	
 	// Release any cached data, images, etc that aren't in use.
 }
@@ -79,7 +82,8 @@
 
 
 - (void)dealloc {
-    [super dealloc];
+  [sm3dar release];
+  [super dealloc];
 }
 
 

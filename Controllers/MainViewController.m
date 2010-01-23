@@ -9,6 +9,7 @@
 #import "MainViewController.h"
 #import "MainView.h"
 #import "Webcam.h"
+#import "WebcamMarkerView.h"
 
 #define WEBCAMS_API_KEY @"6edcac77158f8433f2767a4a1b37a01a"
 #define WEBCAMS_API_UNITS @"km" // can be km or mi
@@ -42,7 +43,7 @@
 #pragma mark -
 
 -(void)loadPointsOfInterest {
-  self.sm3dar.markerViewClass = nil;
+  self.sm3dar.markerViewClass = [WebcamMarkerView class];
   
   CLLocation *loc = [self.sm3dar currentLocation];
   CGFloat radius = [SM3DAR_Session sharedSM3DAR_Session].farClipMeters / 1000.0f;
@@ -107,8 +108,9 @@
 
   for (NSDictionary *attribs in results) {
     Webcam *webcam = [[Webcam alloc] initWithDictionary:attribs];
-    SM3DAR_PointOfInterest *poi = [webcam pointOfInterest];
+    SM3DAR_PointOfInterest *poi = [self.sm3dar initPointOfInterest:[webcam pointOfInterestData]];
     [points addObject:poi];
+    [poi release];
     [webcam release];
   }
 

@@ -8,33 +8,23 @@
 
 #import "Webcam.h"
 
-
 @implementation Webcam
 
-- (SM3DAR_PointOfInterest*) pointOfInterest {
-  SM3DAR_PointOfInterest *poi;
-	CLLocation *tempLocation;
-	CLLocationCoordinate2D location;
-  double lat, lng, alt;
+- (NSDictionary*) pointOfInterestData {
+  NSDictionary *poiFields = [NSDictionary dictionaryWithObjectsAndKeys:
+          // 3DAR POI attributes
+          [self getString:@"latitude"], @"latitude",
+          [self getString:@"longitude"], @"longitude",
+          [self getString:@"title"], @"title",
+          [self getString:@"user"], @"subtitle",
+          [self getString:@"url"], @"url",
+          @"0", @"altitude", nil];
 
-  NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-  lat = [[formatter numberFromString:[self getString:@"latitude"]] doubleValue];
-  lng = [[formatter numberFromString:[self getString:@"longitude"]] doubleValue];
-  alt = 0.0;
-  [formatter release];
-  location.latitude = lat;
-  location.longitude = lng;
-  tempLocation = [[CLLocation alloc] initWithCoordinate:location altitude:alt horizontalAccuracy:1.0 verticalAccuracy:1.0 timestamp:[NSDate date]];
+  NSMutableDictionary *allFields = [NSMutableDictionary dictionary];
+  [allFields addEntriesFromDictionary:self.dictionary];
+  [allFields addEntriesFromDictionary:poiFields];
   
-  NSString *title = [self getString:@"title"];
-  NSString *subtitle = [self getString:@"user"];
-  NSURL *url = [NSURL URLWithString:[self getString:@"url"]];
-  
-  poi = [[SM3DAR_PointOfInterest alloc] initWithLocation:tempLocation title:title subtitle:subtitle url:url];
-  
-  [tempLocation release];		
-  
-  return poi;
+  return allFields;
 }
 
 @end

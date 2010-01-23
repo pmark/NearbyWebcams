@@ -7,12 +7,11 @@
 //
 
 #import "Model.h"
-#import "SM3DAR.h"
 
 @interface Webcam : Model {
 
 }
 
-- (SM3DAR_PointOfInterest*) pointOfInterest;
+- (NSDictionary*) pointOfInterestData;
 
 @end

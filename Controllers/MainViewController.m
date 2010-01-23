@@ -8,6 +8,7 @@
 
 #import "MainViewController.h"
 #import "MainView.h"
+#import "Webcam.h"
 
 #define WEBCAMS_API_KEY @"6edcac77158f8433f2767a4a1b37a01a"
 #define WEBCAMS_API_UNITS @"km" // can be km or mi
@@ -93,7 +94,7 @@
 	// e.g. self.myOutlet = nil;
 }
 
-#pragma mark -
+#pragma mark Webcam API
 - (void) apiClient:(APIClient*)client didReceiveErrorMessages:(NSArray*)messages {
 }
 
@@ -101,7 +102,20 @@
 }
 
 - (void) apiClient:(APIClient*)client didReceiveRemoteItems:(NSArray*)results {
+  //NSLog(@"[MVC] webcams: %@", results);  
+  NSMutableArray *points = [NSMutableArray arrayWithCapacity:[results count]];
+
+  for (NSDictionary *attribs in results) {
+    Webcam *webcam = [[Webcam alloc] initWithDictionary:attribs];
+    SM3DAR_PointOfInterest *poi = [webcam pointOfInterest];
+    [points addObject:poi];
+    [webcam release];
+  }
+
+  [self.sm3dar addPointsOfInterest:points];
 }
+
+#pragma mark -
 
 
 @end

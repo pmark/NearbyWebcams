@@ -12,7 +12,7 @@ TASKS:
 X* make new app with Utility template
 X* copy 3DAR and HR
 X* create API client
-* parse results into POI objects and add to 3DAR
+X* parse results into POI objects and add to 3DAR
 * create custom marker view
 * create custom focus view
 * create custom detail view

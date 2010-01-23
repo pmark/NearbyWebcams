@@ -1,14 +1,30 @@
 NearbyWebcams: 3DAR example app
 Show nearby webcams locations in AR.  When selected, show latest webcam image and metadata.
 
-* Sell to http://www.rocksolidapps.net/webcamspro
+DETAILS:
+- autofocus:  YES
+- focus view:  small webcam thumbnail mapped onto 3D rectangle
+- tap to select view:  larger webcam image in frame with rounded corners
+- API:  this one query is all we need.  Use HTTPRiot.
+- estimated time from start to finish: 2 hours
+
+TASKS:
+* make new app with Utility template
+* copy 3DAR and HR
+* create ApiClient with fetchNearby method
+* parse results into POI objects and add to 3DAR
+* create custom marker view
+* create custom focus view
+* create custom detail view
+* add 3DAR info on app's flip side view
+
+API DOCUMENTATION:
 * webcams.travel API: http://www.webcams.travel/developers/
 
 PORTLAND WEBCAMS:
 http://api.webcams.travel/rest?method=wct.webcams.list_nearby&devid=6edcac77158f8433f2767a4a1b37a01a&lat=45.523548&lng=-122.668705&radius=7&unit=mi&per_page=50&format=xml
 
-
-NEARBY (http://www.webcams.travel/developers/api/wct.webcams.list_nearby):
+NEARBY SEARCH:
 http://api.webcams.travel/rest?method=wct.webcams.list_nearby&devid=XXX&lat=XXX&lng=XXX&radius=XXX&unit=mi&per_page=50&format=json
 
 {"status":"ok","webcams":{"count":57,"page":1,"per_page":1,"webcam":[{"user":"feratel","userid":"31893","user_url":"http:\/\/www.webcams.travel\/user\/31893","webcamid":"1232544583","title":"Gornergrat","view_count":"13457","comment_count":"0","url":"http:\/\/www.webcams.travel\/webcam\/1232544583","icon_url":"http:\/\/images.webcams.travel\/icon\/1232544583.png","thumbnail_url":"http:\/\/images.webcams.travel\/thumbnail\/1232544583.jpg","daylight_icon_url":"http:\/\/archive.webcams.travel\/daylight\/icon\/1232544583.png","daylight_thumbnail_url":"http:\/\/archive.webcams.travel\/daylight\/thumbnail\/1232544583.jpg","latitude":"45.983600","longitude":"7.783050","continent":"EU","country":"CH","city":"Blatten","last_update":1264165429,"rating_avg":"5.00","rating_count":3}]}}

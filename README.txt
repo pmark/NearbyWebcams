@@ -9,9 +9,9 @@ DETAILS:
 - estimated time from start to finish: 2 hours
 
 TASKS:
-* make new app with Utility template
-* copy 3DAR and HR
-* create ApiClient with fetchNearby method
+X* make new app with Utility template
+X* copy 3DAR and HR
+X* create API client
 * parse results into POI objects and add to 3DAR
 * create custom marker view
 * create custom focus view

@@ -9,18 +9,26 @@
 #import "MainViewController.h"
 #import "MainView.h"
 
+#define WEBCAMS_API_KEY @"6edcac77158f8433f2767a4a1b37a01a"
+#define WEBCAMS_API_UNITS @"km" // can be km or mi
 
 @implementation MainViewController
-@synthesize sm3dar;
+@synthesize sm3dar, webcams;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
   if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
-    // Custom initialization
+    self.webcams = [[WebcamsTravelClient alloc] init];
+    self.webcams.apiKey = WEBCAMS_API_KEY;
+    self.webcams.resultsDelegate = self;
   }
   return self;
 }
 
-
+- (void)dealloc {
+  [sm3dar release];
+  [webcams release];
+  [super dealloc];
+}
 
 - (void)viewDidLoad {
   [super viewDidLoad];
@@ -34,6 +42,11 @@
 
 -(void)loadPointsOfInterest {
   self.sm3dar.markerViewClass = nil;
+  
+  CLLocation *loc = [self.sm3dar currentLocation];
+  CGFloat radius = [SM3DAR_Session sharedSM3DAR_Session].farClipMeters / 1000.0f;
+  
+  [self.webcams fetch:loc.coordinate.latitude longitude:loc.coordinate.longitude radius:radius unit:WEBCAMS_API_UNITS];
 }
 
 
@@ -80,10 +93,14 @@
 	// e.g. self.myOutlet = nil;
 }
 
+#pragma mark -
+- (void) apiClient:(APIClient*)client didReceiveErrorMessages:(NSArray*)messages {
+}
 
-- (void)dealloc {
-  [sm3dar release];
-  [super dealloc];
+- (void) apiClient:(APIClient*)client didReceiveEmptyResultSet:(NSDictionary*)parameters {
+}
+
+- (void) apiClient:(APIClient*)client didReceiveRemoteItems:(NSArray*)results {
 }
 
 

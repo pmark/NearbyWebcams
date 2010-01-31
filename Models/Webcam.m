@@ -19,6 +19,8 @@
           [self getString:@"user"], @"subtitle",
           [self getString:@"url"], @"url",
           @"0", @"altitude", nil];
+          
+  //NSLog(@"[WEBCAM] poi: %@", poiFields);
 
   NSMutableDictionary *allFields = [NSMutableDictionary dictionary];
   [allFields addEntriesFromDictionary:self.dictionary];

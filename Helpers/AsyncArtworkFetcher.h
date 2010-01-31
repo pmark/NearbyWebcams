@@ -2,7 +2,7 @@
  *  AsyncArtworkFetcher.h
  *
  *  Created by Josh Aller on 12/29/09.
- *  Copyright 2009 Bordertown Labs, LLC. All rights reserved.
+ *  Copyright 2010 Spot Metrix. All rights reserved.
  *
  *  see http://forums.macrumors.com/showthread.php?t=553870
  */

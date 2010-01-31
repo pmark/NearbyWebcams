@@ -2,7 +2,7 @@
 //  ListingClient.h
 //
 //  Created by P. Mark Anderson on 12/7/09.
-//  Copyright 2009 Bordertown Labs, LLC. All rights reserved.
+//  Copyright 2010 Spot Metrix. All rights reserved.
 //
 
 #import "APIClient.h"

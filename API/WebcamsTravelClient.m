@@ -4,16 +4,18 @@
 //  This client handles listing CRUD.
 //
 //  Created by P. Mark Anderson on 12/7/09.
-//  Copyright 2009 Bordertown Labs, LLC. All rights reserved.
+//  Copyright 2010 Spot Metrix. All rights reserved.
 //
 
 #import "WebcamsTravelClient.h"
 #import "AppConstants.h"
+#import "SM3DAR.h"
+#import "Webcam.h"
 
 #define API_WEBCAMS_BASE_URL @"http://api.webcams.travel"
 #define API_WEBCAMS_ENDPOINT @"/rest"
 #define API_METHOD_NEARBY @"wct.webcams.list_nearby"
-#define API_PER_PAGE @"50"
+#define API_PER_PAGE @"10"
 #define API_RESPONSE_FORMAT @"xml"
 
 @implementation WebcamsTravelClient
@@ -47,11 +49,18 @@
   }
   
   NSLog(@"[API] Preparing %i items", [results count]);
+
+  Webcam *webcam;
+  SM3DAR_PointOfInterest *poi;
   
   // turn results into Listing objects
   NSMutableArray *itemArray = [NSMutableArray arrayWithCapacity:[results count]];
   for (NSDictionary *properties in results) {
-    [itemArray addObject:properties];
+    //NSLog(@"[API] init webcam with properties: %@", properties);
+    webcam = [[Webcam alloc] initWithDictionary:properties];
+    poi = [[SM3DAR_Controller sharedSM3DAR_Controller] initPointOfInterest:[webcam pointOfInterestData]];
+    [itemArray addObject:poi];
+    //[poi release];
   }
   
   [self.resultsDelegate apiClient:self didReceiveRemoteItems:itemArray];

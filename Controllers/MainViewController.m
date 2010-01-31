@@ -9,9 +9,11 @@
 #import "MainViewController.h"
 #import "MainView.h"
 #import "Webcam.h"
+#import "PlacardFocusView.h"
 
 #define WEBCAMS_API_KEY @"6edcac77158f8433f2767a4a1b37a01a"
 #define WEBCAMS_API_UNITS @"km" // can be km or mi
+#define TAG_FOCUS_VIEW 3243
 
 @implementation MainViewController
 @synthesize sm3dar, webcams;
@@ -35,8 +37,12 @@
   [super viewDidLoad];
   
   self.sm3dar = [[[SM3DAR_Controller alloc] init] autorelease];
-  [self.view addSubview:sm3dar.view];
   sm3dar.delegate = self;
+  [self.view addSubview:sm3dar.view];
+
+  [self.sm3dar.focusView removeFromSuperview];
+  [self.sm3dar addFocusView:[[[PlacardFocusView alloc] initWithFrame:self.view.frame] autorelease]];
+  self.sm3dar.focusView.tag = TAG_FOCUS_VIEW;
 }
 
 #pragma mark -
@@ -45,9 +51,11 @@
   self.sm3dar.markerViewClass = [WebcamMarkerView class];
   
   CLLocation *loc = [self.sm3dar currentLocation];
-  CGFloat radius = [SM3DAR_Session sharedSM3DAR_Session].farClipMeters / 1000.0f;
+  CGFloat radius = [SM3DAR_Controller sharedSM3DAR_Controller].farClipMeters / 1000.0f;
   
   [self.webcams fetch:loc.coordinate.latitude longitude:loc.coordinate.longitude radius:radius unit:WEBCAMS_API_UNITS];
+  
+  
 }
 
 #pragma mark Webcam API
@@ -58,46 +66,43 @@
 }
 
 - (void) apiClient:(APIClient*)client didReceiveRemoteItems:(NSArray*)results {
-  //NSLog(@"[MVC] webcams: %@", results);  
-  NSMutableArray *points = [NSMutableArray arrayWithCapacity:[results count]];
-
-  for (NSDictionary *attribs in results) {
-    Webcam *webcam = [[Webcam alloc] initWithDictionary:attribs];
-    SM3DAR_PointOfInterest *poi = [self.sm3dar initPointOfInterest:[webcam pointOfInterestData]];
-    [points addObject:poi];
-    [poi release];
-    [webcam release];
-  }
-
-  [self.sm3dar addPointsOfInterest:points];
+  NSLog(@"[MVC] adding %i webcams", [results count]);    
+  [self.sm3dar addPointsOfInterest:results];
   [self.sm3dar zoomMapToFit];
 }
 
 #pragma mark -
 
 
--(void)didChangeFocusToPOI:(SM3DAR_PointOfInterest*)newPOI fromPOI:(SM3DAR_PointOfInterest*)oldPOI {
-  CGFloat maxScale = 2.5f;
-  
-  WebcamMarkerView *oldView = (WebcamMarkerView*)oldPOI.view;
-  [self addResizeAnimation:oldView scalar:1.0];
+//-(void)didChangeFocusToPOI:(SM3DAR_PointOfInterest*)newPOI fromPOI:(SM3DAR_PointOfInterest*)oldPOI {
+-(void)didChangeFocusToPOI:(SM3DAR_Point*)newPOI fromPOI:(SM3DAR_Point*)oldPOI {
+  WebcamMarkerView *newView = (WebcamMarkerView*)newPOI.view;  
+  //NSLog(@"[MVC] Changed focus to %@", newView.poi.title);
 
-  WebcamMarkerView *newView = (WebcamMarkerView*)newPOI.view;
-  [self addResizeAnimation:newView scalar:maxScale];  
+//  CGFloat maxScale = 2.3f;  
+//  WebcamMarkerView *oldView = (WebcamMarkerView*)oldPOI.view;
+//  [self addResizeAnimation:oldView scalar:(1.0 / maxScale)];
+  //oldView.distanceScaleFactor = (1.0 / maxScale);
+
+//  [self addResizeAnimation:newView scalar:maxScale];  
+  
+  [self.view bringSubviewToFront:newView];
+  [self.view bringSubviewToFront:[self.view viewWithTag:TAG_FOCUS_VIEW]];
 }
 
 - (void) addResizeAnimation:(WebcamMarkerView*)markerView scalar:(CGFloat)scalar {
 //  NSLog(@"Scaling by %f", scalar);
 	CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"transform.scale"];	
+//  [anim setToValue:[NSNumber numberWithFloat:scalar]];
   [anim setToValue:[NSNumber numberWithFloat:scalar]];
   anim.fillMode = kCAFillModeForwards;
-  anim.removedOnCompletion = NO;
+  anim.removedOnCompletion = YES;
   anim.autoreverses = NO;
-  anim.duration = 1.0;
+  anim.duration = 0.4f;
 
-	[markerView.layer addAnimation:anim forKey:@"resize"];
+//	[markerView.layer addAnimation:anim forKey:@"resize"];
 
-  markerView.distanceScaleFactor = 2.5;
+//markerView.distanceScaleFactor = scalar;
 //	markerView.layer.transform = CATransform3DMakeScale(scalar, scalar, 1.0);
 //	markerView.layer.transform = CATransform3DScale(markerView.layer.transform, scalar, scalar, 1.0);
 }
